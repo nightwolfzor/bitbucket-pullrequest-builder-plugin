@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.logging.Logger;
 
 /**
- * Created by nishio
+ * Created by Nathan McCarthy
  */
 public class BitbucketPullRequestsBuilder {
     private static final Logger logger = Logger.getLogger(BitbucketBuildTrigger.class.getName());

@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import java.util.logging.Logger;
 
 /**
- * Created by nishio
+ * Created by Nathan McCarthy
  */
 @Extension
 public class BitbucketBuildListener extends RunListener<AbstractBuild> {

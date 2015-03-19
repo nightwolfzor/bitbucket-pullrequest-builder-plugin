@@ -17,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by nishio
+ * Created by Nathan McCarthy
  */
 public class BitbucketBuildTrigger extends Trigger<AbstractProject<?, ?>> {
     private static final Logger logger = Logger.getLogger(BitbucketBuildTrigger.class.getName());

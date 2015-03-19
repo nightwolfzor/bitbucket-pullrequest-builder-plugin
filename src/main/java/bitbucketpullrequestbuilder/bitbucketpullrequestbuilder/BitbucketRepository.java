@@ -14,7 +14,7 @@ import bitbucketpullrequestbuilder.bitbucketpullrequestbuilder.bitbucket.Bitbuck
 import bitbucketpullrequestbuilder.bitbucketpullrequestbuilder.bitbucket.BitbucketPullRequestResponseValueRepository;
 
 /**
- * Created by nishio
+ * Created by Nathan McCarthy
  */
 public class BitbucketRepository {
     private static final Logger logger = Logger.getLogger(BitbucketRepository.class.getName());
@@ -61,8 +61,8 @@ public class BitbucketRepository {
     }
 
     public String postBuildStartCommentTo(BitbucketPullRequestResponseValue pullRequest) {
-            String sourceCommit = pullRequest.getSource().getCommit().getHash();
-            String destinationCommit = pullRequest.getDestination().getCommit().getHash();
+            String sourceCommit = pullRequest.getFromRef().getCommit().getHash();
+            String destinationCommit = pullRequest.getToRef().getCommit().getHash();
             String comment = String.format(BUILD_START_MARKER, builder.getProject().getDisplayName(), sourceCommit, destinationCommit);
             BitbucketPullRequestComment commentResponse = this.client.postPullRequestComment(pullRequest.getId(), comment);
             return commentResponse.getCommentId().toString();
@@ -72,16 +72,16 @@ public class BitbucketRepository {
         for(BitbucketPullRequestResponseValue pullRequest : pullRequests) {
             String commentId = postBuildStartCommentTo(pullRequest);
             BitbucketCause cause = new BitbucketCause(
-                    pullRequest.getSource().getBranch().getName(),
-                    pullRequest.getDestination().getBranch().getName(),
-                    pullRequest.getSource().getRepository().getOwnerName(),
-                    pullRequest.getSource().getRepository().getRepositoryName(),
+                    pullRequest.getFromRef().getBranch().getName(),
+                    pullRequest.getToRef().getBranch().getName(),
+                    pullRequest.getFromRef().getRepository().getProjectName(),
+                    pullRequest.getFromRef().getRepository().getRepositoryName(),
                     pullRequest.getId(),
-                    pullRequest.getDestination().getRepository().getOwnerName(),
-                    pullRequest.getDestination().getRepository().getRepositoryName(),
+                    pullRequest.getToRef().getRepository().getProjectName(),
+                    pullRequest.getToRef().getRepository().getRepositoryName(),
                     pullRequest.getTitle(),
-                    pullRequest.getSource().getCommit().getHash(),
-                    pullRequest.getDestination().getCommit().getHash(),
+                    pullRequest.getFromRef().getCommit().getHash(),
+                    pullRequest.getToRef().getCommit().getHash(),
                     commentId);
             this.builder.getTrigger().startJob(cause);
         }
@@ -109,10 +109,10 @@ public class BitbucketRepository {
                 return false;
             }
 
-            String sourceCommit = pullRequest.getSource().getCommit().getHash();
+            String sourceCommit = pullRequest.getFromRef().getCommit().getHash();
 
-            BitbucketPullRequestResponseValueRepository destination = pullRequest.getDestination();
-            String owner = destination.getRepository().getOwnerName();
+            BitbucketPullRequestResponseValueRepository destination = pullRequest.getToRef();
+            String owner = destination.getRepository().getProjectName();
             String repositoryName = destination.getRepository().getRepositoryName();
             String destinationCommit = destination.getCommit().getHash();
             
@@ -123,7 +123,7 @@ public class BitbucketRepository {
                 Collections.sort(comments);
                 Collections.reverse(comments);
                 for (BitbucketPullRequestComment comment : comments) {
-                    String content = comment.getContent();
+                    String content = comment.getText();
                     if (content == null || content.isEmpty()) {
                         continue;
                     }

@@ -6,24 +6,26 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import java.util.List;
 
 /**
- * Created by nishio
+ * Created by Nathan McCarthy
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BitbucketPullRequestResponse {
-    private int pageLength;
+//    private int pageLength;
     private List<BitbucketPullRequestResponseValue> prValues;
-    private int page;
-    private int size;
 
-    @JsonProperty("pagelen")
-    public int getPageLength() {
-        return pageLength;
-    }
+//    private int page;
 
-    @JsonProperty("pagelen")
-    public void setPageLength(int pageLength) {
-        this.pageLength = pageLength;
-    }
+    private int size;//
+
+//    @JsonProperty("pagelen")
+//    public int getPageLength() {
+//        return pageLength;
+//    }
+//
+//    @JsonProperty("pagelen")
+//    public void setPageLength(int pageLength) {
+//        this.pageLength = pageLength;
+//    }
 
     @JsonProperty("values")
     public List<BitbucketPullRequestResponseValue> getPrValues() {
@@ -35,15 +37,15 @@ public class BitbucketPullRequestResponse {
         this.prValues = prValues;
     }
 
-    @JsonProperty("page")
-    public int getPage() {
-        return page;
-    }
-
-    @JsonProperty("page")
-    public void setPage(int page) {
-        this.page = page;
-    }
+//    @JsonProperty("page")
+//    public int getPage() {
+//        return page;
+//    }
+//
+//    @JsonProperty("page")
+//    public void setPage(int page) {
+//        this.page = page;
+//    }
 
     @JsonProperty("size")
     public int getSize() {

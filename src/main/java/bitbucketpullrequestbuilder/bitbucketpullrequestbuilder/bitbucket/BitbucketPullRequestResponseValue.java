@@ -4,22 +4,26 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- * Created by nishio
+ * Created by Nathan McCarthy
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BitbucketPullRequestResponseValue {
-    private String description;
-    private Boolean closeSourceBranch;
-    private String title;
-    private BitbucketPullRequestResponseValueRepository destination;
-    private String reason;
-    private String closedBy;
-    private BitbucketPullRequestResponseValueRepository source;
-    private String state;
-    private String createdOn;
-    private String updatedOn;
-    private String mergeCommit;
-    private String id;
+    private String description; //
+    private Boolean locked; //
+
+    private String title; //
+
+    private BitbucketPullRequestResponseValueRepository toRef;
+
+    private Boolean closed; //
+
+    private BitbucketPullRequestResponseValueRepository fromRef;
+
+    private String state; //
+    private String createdDate; //
+    private String updatedDate; //
+
+    private String id; //
 
     public String getDescription() {
         return description;
@@ -29,14 +33,14 @@ public class BitbucketPullRequestResponseValue {
         this.description = description;
     }
 
-    @JsonProperty("close_source_branch")
-    public Boolean getCloseSourceBranch() {
-        return closeSourceBranch;
+    @JsonProperty("locked")
+    public Boolean getLocked() {
+        return locked;
     }
 
-    @JsonProperty("close_source_branch")
-    public void setCloseSourceBranch(Boolean closeSourceBranch) {
-        this.closeSourceBranch = closeSourceBranch;
+    @JsonProperty("locked")
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
     }
 
     public String getTitle() {
@@ -47,38 +51,30 @@ public class BitbucketPullRequestResponseValue {
         this.title = title;
     }
 
-    public BitbucketPullRequestResponseValueRepository getDestination() {
-        return destination;
+    public BitbucketPullRequestResponseValueRepository getToRef() {
+        return toRef;
     }
 
-    public void setDestination(BitbucketPullRequestResponseValueRepository destination) {
-        this.destination = destination;
+    public void setToRef(BitbucketPullRequestResponseValueRepository toRef) {
+        this.toRef = toRef;
     }
 
-    public String getReason() {
-        return reason;
+    @JsonProperty("closed")
+    public Boolean getClosed() {
+        return closed;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
+    @JsonProperty("closed")
+    public void setClosed(Boolean closed) {
+        this.closed = closed;
     }
 
-    @JsonProperty("closed_by")
-    public String getClosedBy() {
-        return closedBy;
+    public BitbucketPullRequestResponseValueRepository getFromRef() {
+        return fromRef;
     }
 
-    @JsonProperty("closed_by")
-    public void setClosedBy(String closedBy) {
-        this.closedBy = closedBy;
-    }
-
-    public BitbucketPullRequestResponseValueRepository getSource() {
-        return source;
-    }
-
-    public void setSource(BitbucketPullRequestResponseValueRepository source) {
-        this.source = source;
+    public void setFromRef(BitbucketPullRequestResponseValueRepository fromRef) {
+        this.fromRef = fromRef;
     }
 
     public String getState() {
@@ -89,35 +85,26 @@ public class BitbucketPullRequestResponseValue {
         this.state = state;
     }
 
-    @JsonProperty("created_on")
-    public String getCreatedOn() {
-        return createdOn;
+    @JsonProperty("createdDate")
+    public String getCreatedDate() {
+        return createdDate;
     }
 
-    @JsonProperty("created_on")
-    public void setCreatedOn(String createdOn) {
-        this.createdOn = createdOn;
+    @JsonProperty("createdDate")
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 
-    @JsonProperty("updated_on")
-    public String getUpdatedOn() {
-        return updatedOn;
+    @JsonProperty("updatedDate")
+    public String getUpdatedDate() {
+        return updatedDate;
     }
 
-    @JsonProperty("updated_on")
-    public void setUpdatedOn(String updatedOn) {
-        this.updatedOn = updatedOn;
+    @JsonProperty("updatedDate")
+    public void setUpdatedDate(String updatedDate) {
+        this.updatedDate = updatedDate;
     }
 
-    @JsonProperty("merge_commit")
-    public String getMergeCommit() {
-        return mergeCommit;
-    }
-
-    @JsonProperty("merge_commit")
-    public void setMergeCommit(String mergeCommit) {
-        this.mergeCommit = mergeCommit;
-    }
 
     public String getId() {
         return id;

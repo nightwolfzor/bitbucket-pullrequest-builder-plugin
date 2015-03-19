@@ -6,12 +6,12 @@
     <version>1.509.4</version><!-- which version of Jenkins is this plugin built against? -->
   </parent>
 
-  <artifactId>bitbucket-pullrequest-builder</artifactId>
-  <name>Bitbucket Pullrequest Builder Plugin</name>
-  <version>1.4.6-SNAPSHOT</version>
-  <description>This Jenkins plugin builds pull requests from Bitbucket.org and will report the test results.</description>
+  <artifactId>stash-pullrequest-builder</artifactId>
+  <name>Stash Pullrequest Builder Plugin</name>
+  <version>1.0.0-SNAPSHOT</version>
+  <description>This Jenkins plugin builds pull requests from Stash and will report the test results.</description>
   <packaging>hpi</packaging>
-  <url>https://wiki.jenkins-ci.org/display/JENKINS/Bitbucket+pullrequest+builder+plugin</url>
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/Stash+pullrequest+builder+plugin</url>
 
   <scm>
     <connection>scm:git:ssh://git@github.com/jenkinsci/bitbucket-pullrequest-builder-plugin.git</connection>
@@ -21,9 +21,9 @@
   </scm>
   <developers>
     <developer>
-      <id>nishio_dens</id>
-      <name>nishio_dens</name>
-      <email>nishio@densan-labs.net</email>
+      <id>nemccarthy</id>
+      <name>nemccarthy</name>
+      <email>nem@nemccarthy.me</email>
     </developer>
   </developers>
 

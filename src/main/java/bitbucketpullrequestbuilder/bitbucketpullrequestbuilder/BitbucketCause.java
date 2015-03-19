@@ -3,7 +3,7 @@ package bitbucketpullrequestbuilder.bitbucketpullrequestbuilder;
 import hudson.model.Cause;
 
 /**
- * Created by nishio
+ * Created by Nathan McCarthy
  */
 public class BitbucketCause extends Cause {
     private final String sourceBranch;

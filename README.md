@@ -76,7 +76,7 @@ Contributing to Bitbucket Pull Request Builder Plugin
 Copyright
 =============================
 
-Copyright © 2014 S.nishio. 
+Copyright © 2014 S.Nathan McCarthy.
 
 
 License

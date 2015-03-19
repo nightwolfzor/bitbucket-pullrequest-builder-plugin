@@ -4,13 +4,13 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BitbucketPullRequestResponseValueRepositoryCommit {
-    private String Hash;
+    private String latestChangeset;
 
     public String getHash() {
-        return Hash;
+        return latestChangeset;
     }
 
     public void setHash(String hash) {
-        Hash = hash;
+        this.latestChangeset = hash;
     }
 }

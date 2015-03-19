@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by nishio
+ * Created by Nathan McCarthy
  */
 public class BitbucketBuilds {
     private static final Logger logger = Logger.getLogger(BitbucketBuilds.class.getName());

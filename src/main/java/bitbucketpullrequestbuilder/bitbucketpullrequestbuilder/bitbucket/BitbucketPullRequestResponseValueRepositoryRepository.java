@@ -5,39 +5,36 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BitbucketPullRequestResponseValueRepositoryRepository {
-    private String fullName;
-    private String name;
+    private String slug;
+    private BitbucketPullRequestResponseValueRepositoryProject project;
 
-    @JsonProperty("full_name")
-    public String getFullName() {
-        return fullName;
+    @JsonProperty("project")
+    public BitbucketPullRequestResponseValueRepositoryProject getRepository() {
+        return project;
     }
 
-    @JsonProperty("full_name")
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    @JsonProperty("project")
+    public void setRepository(BitbucketPullRequestResponseValueRepositoryProject project) {
+        this.project = project;
     }
 
-    public String getName() {
-        return name;
+    public String getSlug() {
+        return slug;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 
-    public String getOwnerName() {
-        if (this.fullName != null) {
-            return this.fullName.split("/")[0];
+    public String getProjectName() {
+        if (this.project != null && project.getKey() != null) {
+            return project.getKey();
         }
         return null;
     }
 
     public String getRepositoryName() {
-        if (this.fullName != null) {
-            return this.fullName.split("/")[1];
-        }
-        return null;
+        return this.slug;
     }
 }
 
