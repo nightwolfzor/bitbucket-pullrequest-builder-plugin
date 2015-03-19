@@ -2,11 +2,10 @@ package stashpullrequestbuilder.stashpullrequestbuilder.stash;
 
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -15,9 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import jenkins.model.Jenkins;
-import hudson.ProxyConfiguration;
 
 /**
  * Created by Nathan McCarthy
@@ -51,7 +47,7 @@ public class StashApiClient {
 
     public List<StashPullRequestComment> getPullRequestComments(String commentOwnerName, String commentRepositoryName, String pullRequestId) {
         String response = getRequest(
-            V1_API_BASE_URL + commentOwnerName + "/" + commentRepositoryName + "/pull-requests/" + pullRequestId + "/activities");
+            V1_API_BASE_URL + commentOwnerName + "/repos/" + commentRepositoryName + "/pull-requests/" + pullRequestId + "/activities");
         try {
             return parseCommentJson(response);
         } catch(Exception e) {
@@ -61,14 +57,14 @@ public class StashApiClient {
     }
 
     public void deletePullRequestComment(String pullRequestId, String commentId) {
-        String path = V1_API_BASE_URL + this.project + "/" + this.repositoryName + "/pull-requests/" + pullRequestId + "/comments/" + commentId;
+        String path = V1_API_BASE_URL + this.project + "/repos/" + this.repositoryName + "/pull-requests/" + pullRequestId + "/comments/" + commentId;
         //https://bitbucket.org/api/1.0/repositories/{accountname}/{repo_slug}/pullrequests/{pull_request_id}/comments/{comment_id}
         deleteRequest(path);
     }
 
 
     public StashPullRequestComment postPullRequestComment(String pullRequestId, String comment) {
-        String path = V1_API_BASE_URL + this.project + "/" + this.repositoryName + "/pull-requests/" + pullRequestId + "/comments";
+        String path = V1_API_BASE_URL + this.project + "/repos/" + this.repositoryName + "/pull-requests/" + pullRequestId + "/comments";
         try {
             NameValuePair content = new NameValuePair("text", comment);
             String response = postRequest(path, new NameValuePair[]{ content });
@@ -85,25 +81,26 @@ public class StashApiClient {
 
     private HttpClient getHttpClient() {
         HttpClient client = new HttpClient();
-        if (Jenkins.getInstance() != null) {
-            ProxyConfiguration proxy = Jenkins.getInstance().proxy;
-            if (proxy != null) {
-                logger.info("Jenkins proxy: " + proxy.name + ":" + proxy.port);
-                client.getHostConfiguration().setProxy(proxy.name, proxy.port);
-                String username = proxy.getUserName();
-                String password = proxy.getPassword();
-                // Consider it to be passed if username specified. Sufficient?
-                if (username != null && !"".equals(username.trim())) {
-                    logger.info("Using proxy authentication (user=" + username + ")");
-                    client.getState().setProxyCredentials(AuthScope.ANY,
-                        new UsernamePasswordCredentials(username, password));
-                }
-            }
-        }
+//        if (Jenkins.getInstance() != null) {
+//            ProxyConfiguration proxy = Jenkins.getInstance().proxy;
+//            if (proxy != null) {
+//                logger.info("Jenkins proxy: " + proxy.name + ":" + proxy.port);
+//                client.getHostConfiguration().setProxy(proxy.name, proxy.port);
+//                String username = proxy.getUserName();
+//                String password = proxy.getPassword();
+//                // Consider it to be passed if username specified. Sufficient?
+//                if (username != null && !"".equals(username.trim())) {
+//                    logger.info("Using proxy authentication (user=" + username + ")");
+//                    client.getState().setProxyCredentials(AuthScope.ANY,
+//                        new UsernamePasswordCredentials(username, password));
+//                }
+//            }
+//        }
         return client;
     }
 
     private String getRequest(String path) {
+        logger.log(Level.INFO, "PR-GET-REQUEST:" + path);
         HttpClient client = getHttpClient();
         client.getState().setCredentials(AuthScope.ANY, credentials);
         GetMethod httpget = new GetMethod(path);
@@ -117,6 +114,7 @@ public class StashApiClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        logger.log(Level.INFO, "PR-GET-RESPONSE:" + response);
         return response;
     }
 
@@ -134,6 +132,7 @@ public class StashApiClient {
     }
 
     private String postRequest(String path, NameValuePair[] params) throws UnsupportedEncodingException {
+        logger.log(Level.INFO, "PR-POST-REQUEST:" + path);
         HttpClient client = getHttpClient();
         client.getState().setCredentials(AuthScope.ANY, credentials);
         PostMethod httppost = new PostMethod(path);
@@ -149,6 +148,7 @@ public class StashApiClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        logger.log(Level.INFO, "PR-POST-RESPONSE:" + response);
         return response;
 
     }
@@ -162,14 +162,11 @@ public class StashApiClient {
 
     private List<StashPullRequestComment> parseCommentJson(String response) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        List<BitBucketPullRequestActivitity> parsedResponse;
-        parsedResponse = mapper.readValue(
-                response,
-                new TypeReference<List<BitBucketPullRequestActivitity>>() {
-                });
+        StashPullRequestActivityResponse parsedResponse;
+        parsedResponse = mapper.readValue(response, StashPullRequestActivityResponse.class);
         List<StashPullRequestComment> comments = new ArrayList<StashPullRequestComment>();
-        for (BitBucketPullRequestActivitity a : parsedResponse) {
-            comments.add(a.getComment());
+        for (StashPullRequestActivitity a : parsedResponse.getPrValues()) {
+            if (a != null && a.getComment() != null) comments.add(a.getComment());
         }
         return comments;
     }
