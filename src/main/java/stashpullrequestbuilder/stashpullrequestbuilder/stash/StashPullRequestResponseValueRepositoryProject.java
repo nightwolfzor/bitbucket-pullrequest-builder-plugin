@@ -1,9 +1,9 @@
-package bitbucketpullrequestbuilder.bitbucketpullrequestbuilder.bitbucket;
+package stashpullrequestbuilder.stashpullrequestbuilder.stash;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BitbucketPullRequestResponseValueRepositoryProject {
+public class StashPullRequestResponseValueRepositoryProject {
     private String key;
 
     public String getKey() {

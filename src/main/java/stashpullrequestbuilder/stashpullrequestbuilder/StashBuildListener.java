@@ -1,4 +1,4 @@
-package bitbucketpullrequestbuilder.bitbucketpullrequestbuilder;
+package stashpullrequestbuilder.stashpullrequestbuilder;
 
 import hudson.Extension;
 import hudson.model.AbstractBuild;
@@ -12,13 +12,13 @@ import java.util.logging.Logger;
  * Created by Nathan McCarthy
  */
 @Extension
-public class BitbucketBuildListener extends RunListener<AbstractBuild> {
-    private static final Logger logger = Logger.getLogger(BitbucketBuildTrigger.class.getName());
+public class StashBuildListener extends RunListener<AbstractBuild> {
+    private static final Logger logger = Logger.getLogger(StashBuildTrigger.class.getName());
 
     @Override
     public void onStarted(AbstractBuild abstractBuild, TaskListener listener) {
         logger.info("BuildListener onStarted called.");
-        BitbucketBuildTrigger trigger = BitbucketBuildTrigger.getTrigger(abstractBuild.getProject());
+        StashBuildTrigger trigger = StashBuildTrigger.getTrigger(abstractBuild.getProject());
         if (trigger == null) {
             return;
         }
@@ -27,7 +27,7 @@ public class BitbucketBuildListener extends RunListener<AbstractBuild> {
 
     @Override
     public void onCompleted(AbstractBuild abstractBuild, @Nonnull TaskListener listener) {
-        BitbucketBuildTrigger trigger = BitbucketBuildTrigger.getTrigger(abstractBuild.getProject());
+        StashBuildTrigger trigger = StashBuildTrigger.getTrigger(abstractBuild.getProject());
         if (trigger == null) {
             return;
         }

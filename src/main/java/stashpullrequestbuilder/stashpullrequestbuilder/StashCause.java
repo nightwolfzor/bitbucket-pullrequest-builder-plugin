@@ -1,11 +1,11 @@
-package bitbucketpullrequestbuilder.bitbucketpullrequestbuilder;
+package stashpullrequestbuilder.stashpullrequestbuilder;
 
 import hudson.model.Cause;
 
 /**
  * Created by Nathan McCarthy
  */
-public class BitbucketCause extends Cause {
+public class StashCause extends Cause {
     private final String sourceBranch;
     private final String targetBranch;
     private final String repositoryOwner;
@@ -19,7 +19,7 @@ public class BitbucketCause extends Cause {
     private final String buildStartCommentId;
     public static final String BITBUCKET_URL = "https://bitbucket.org/";
 
-    public BitbucketCause(String sourceBranch,
+    public StashCause(String sourceBranch,
                           String targetBranch,
                           String repositoryOwner,
                           String repositoryName,

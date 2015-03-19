@@ -1,4 +1,4 @@
-package bitbucketpullrequestbuilder.bitbucketpullrequestbuilder.bitbucket;
+package stashpullrequestbuilder.stashpullrequestbuilder.stash;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
@@ -7,13 +7,13 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BitBucketPullRequestActivitity  {
-    private BitbucketPullRequestComment comment;
+    private StashPullRequestComment comment;
 
-    public BitbucketPullRequestComment getComment() {
+    public StashPullRequestComment getComment() {
         return comment;
     }
 
-    public void setComment(BitbucketPullRequestComment comment) {
+    public void setComment(StashPullRequestComment comment) {
         this.comment = comment;
     }
 }

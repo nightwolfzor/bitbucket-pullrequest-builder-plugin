@@ -1,4 +1,4 @@
-package bitbucketpullrequestbuilder.bitbucketpullrequestbuilder.bitbucket;
+package stashpullrequestbuilder.stashpullrequestbuilder.stash;
 
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.auth.AuthScope;
@@ -22,8 +22,8 @@ import hudson.ProxyConfiguration;
 /**
  * Created by Nathan McCarthy
  */
-public class BitbucketApiClient {
-    private static final Logger logger = Logger.getLogger(BitbucketApiClient.class.getName());
+public class StashApiClient {
+    private static final Logger logger = Logger.getLogger(StashApiClient.class.getName());
 
     private static final String STASH_HOST = "https://git.int.quantium.com.au";
     private static final String V1_API_BASE_URL = STASH_HOST + "/rest/api/1.0/projects/";
@@ -33,13 +33,13 @@ public class BitbucketApiClient {
     private String repositoryName;
     private Credentials credentials;
 
-    public BitbucketApiClient(String username, String password, String project, String repositoryName) {
+    public StashApiClient(String username, String password, String project, String repositoryName) {
         this.credentials = new UsernamePasswordCredentials(username, password);
         this.project = project;
         this.repositoryName = repositoryName;
     }
 
-    public List<BitbucketPullRequestResponseValue> getPullRequests() {
+    public List<StashPullRequestResponseValue> getPullRequests() {
         String response = getRequest(V2_API_BASE_URL + this.project + "/repos/" + this.repositoryName + "/pull-requests/");
         try {
             return parsePullRequestJson(response).getPrValues();
@@ -49,7 +49,7 @@ public class BitbucketApiClient {
         return Collections.EMPTY_LIST;
     }
 
-    public List<BitbucketPullRequestComment> getPullRequestComments(String commentOwnerName, String commentRepositoryName, String pullRequestId) {
+    public List<StashPullRequestComment> getPullRequestComments(String commentOwnerName, String commentRepositoryName, String pullRequestId) {
         String response = getRequest(
             V1_API_BASE_URL + commentOwnerName + "/" + commentRepositoryName + "/pull-requests/" + pullRequestId + "/activities");
         try {
@@ -67,7 +67,7 @@ public class BitbucketApiClient {
     }
 
 
-    public BitbucketPullRequestComment postPullRequestComment(String pullRequestId, String comment) {
+    public StashPullRequestComment postPullRequestComment(String pullRequestId, String comment) {
         String path = V1_API_BASE_URL + this.project + "/" + this.repositoryName + "/pull-requests/" + pullRequestId + "/comments";
         try {
             NameValuePair content = new NameValuePair("text", comment);
@@ -153,33 +153,33 @@ public class BitbucketApiClient {
 
     }
 
-    private BitbucketPullRequestResponse parsePullRequestJson(String response) throws IOException {
+    private StashPullRequestResponse parsePullRequestJson(String response) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        BitbucketPullRequestResponse parsedResponse;
-        parsedResponse = mapper.readValue(response, BitbucketPullRequestResponse.class);
+        StashPullRequestResponse parsedResponse;
+        parsedResponse = mapper.readValue(response, StashPullRequestResponse.class);
         return parsedResponse;
     }
 
-    private List<BitbucketPullRequestComment> parseCommentJson(String response) throws IOException {
+    private List<StashPullRequestComment> parseCommentJson(String response) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         List<BitBucketPullRequestActivitity> parsedResponse;
         parsedResponse = mapper.readValue(
                 response,
                 new TypeReference<List<BitBucketPullRequestActivitity>>() {
                 });
-        List<BitbucketPullRequestComment> comments = new ArrayList<BitbucketPullRequestComment>();
+        List<StashPullRequestComment> comments = new ArrayList<StashPullRequestComment>();
         for (BitBucketPullRequestActivitity a : parsedResponse) {
             comments.add(a.getComment());
         }
         return comments;
     }
 
-    private BitbucketPullRequestComment parseSingleCommentJson(String response) throws IOException {
+    private StashPullRequestComment parseSingleCommentJson(String response) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        BitbucketPullRequestComment parsedResponse;
+        StashPullRequestComment parsedResponse;
         parsedResponse = mapper.readValue(
                 response,
-                BitbucketPullRequestComment.class);
+                StashPullRequestComment.class);
         return parsedResponse;
     }
 }

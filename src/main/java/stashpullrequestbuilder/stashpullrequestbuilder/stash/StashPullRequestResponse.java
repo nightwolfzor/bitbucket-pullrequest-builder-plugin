@@ -1,4 +1,4 @@
-package bitbucketpullrequestbuilder.bitbucketpullrequestbuilder.bitbucket;
+package stashpullrequestbuilder.stashpullrequestbuilder.stash;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -9,9 +9,9 @@ import java.util.List;
  * Created by Nathan McCarthy
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BitbucketPullRequestResponse {
+public class StashPullRequestResponse {
 //    private int pageLength;
-    private List<BitbucketPullRequestResponseValue> prValues;
+    private List<StashPullRequestResponseValue> prValues;
 
 //    private int page;
 
@@ -28,12 +28,12 @@ public class BitbucketPullRequestResponse {
 //    }
 
     @JsonProperty("values")
-    public List<BitbucketPullRequestResponseValue> getPrValues() {
+    public List<StashPullRequestResponseValue> getPrValues() {
         return prValues;
     }
 
     @JsonProperty("values")
-    public void setPrValues(List<BitbucketPullRequestResponseValue> prValues) {
+    public void setPrValues(List<StashPullRequestResponseValue> prValues) {
         this.prValues = prValues;
     }
 

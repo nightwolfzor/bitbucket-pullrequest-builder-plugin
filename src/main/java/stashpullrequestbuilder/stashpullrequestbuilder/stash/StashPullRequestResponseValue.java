@@ -1,4 +1,4 @@
-package bitbucketpullrequestbuilder.bitbucketpullrequestbuilder.bitbucket;
+package stashpullrequestbuilder.stashpullrequestbuilder.stash;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -7,17 +7,17 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * Created by Nathan McCarthy
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BitbucketPullRequestResponseValue {
+public class StashPullRequestResponseValue {
     private String description; //
     private Boolean locked; //
 
     private String title; //
 
-    private BitbucketPullRequestResponseValueRepository toRef;
+    private StashPullRequestResponseValueRepository toRef;
 
     private Boolean closed; //
 
-    private BitbucketPullRequestResponseValueRepository fromRef;
+    private StashPullRequestResponseValueRepository fromRef;
 
     private String state; //
     private String createdDate; //
@@ -51,11 +51,11 @@ public class BitbucketPullRequestResponseValue {
         this.title = title;
     }
 
-    public BitbucketPullRequestResponseValueRepository getToRef() {
+    public StashPullRequestResponseValueRepository getToRef() {
         return toRef;
     }
 
-    public void setToRef(BitbucketPullRequestResponseValueRepository toRef) {
+    public void setToRef(StashPullRequestResponseValueRepository toRef) {
         this.toRef = toRef;
     }
 
@@ -69,11 +69,11 @@ public class BitbucketPullRequestResponseValue {
         this.closed = closed;
     }
 
-    public BitbucketPullRequestResponseValueRepository getFromRef() {
+    public StashPullRequestResponseValueRepository getFromRef() {
         return fromRef;
     }
 
-    public void setFromRef(BitbucketPullRequestResponseValueRepository fromRef) {
+    public void setFromRef(StashPullRequestResponseValueRepository fromRef) {
         this.fromRef = fromRef;
     }
 

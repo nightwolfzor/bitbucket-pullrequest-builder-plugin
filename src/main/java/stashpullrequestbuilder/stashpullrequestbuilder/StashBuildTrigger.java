@@ -1,4 +1,4 @@
-package bitbucketpullrequestbuilder.bitbucketpullrequestbuilder;
+package stashpullrequestbuilder.stashpullrequestbuilder;
 
 import antlr.ANTLRException;
 import hudson.Extension;
@@ -19,8 +19,8 @@ import java.util.logging.Logger;
 /**
  * Created by Nathan McCarthy
  */
-public class BitbucketBuildTrigger extends Trigger<AbstractProject<?, ?>> {
-    private static final Logger logger = Logger.getLogger(BitbucketBuildTrigger.class.getName());
+public class StashBuildTrigger extends Trigger<AbstractProject<?, ?>> {
+    private static final Logger logger = Logger.getLogger(StashBuildTrigger.class.getName());
     private final String projectPath;
     private final String cron;
     private final String username;
@@ -30,13 +30,13 @@ public class BitbucketBuildTrigger extends Trigger<AbstractProject<?, ?>> {
     private final String ciSkipPhrases;
     private final boolean checkDestinationCommit;
     
-    transient private BitbucketPullRequestsBuilder bitbucketPullRequestsBuilder;
+    transient private StashPullRequestsBuilder bitbucketPullRequestsBuilder;
 
     @Extension
-    public static final BitbucketBuildTriggerDescriptor descriptor = new BitbucketBuildTriggerDescriptor();
+    public static final StashBuildTriggerDescriptor descriptor = new StashBuildTriggerDescriptor();
 
     @DataBoundConstructor
-    public BitbucketBuildTrigger(
+    public StashBuildTrigger(
             String projectPath,
             String cron,
             String username,
@@ -92,7 +92,7 @@ public class BitbucketBuildTrigger extends Trigger<AbstractProject<?, ?>> {
     @Override
     public void start(AbstractProject<?, ?> project, boolean newInstance) {
         try {
-            this.bitbucketPullRequestsBuilder = BitbucketPullRequestsBuilder.getBuilder();
+            this.bitbucketPullRequestsBuilder = StashPullRequestsBuilder.getBuilder();
             this.bitbucketPullRequestsBuilder.setProject(project);
             this.bitbucketPullRequestsBuilder.setTrigger(this);
             this.bitbucketPullRequestsBuilder.setupBuilder();
@@ -103,16 +103,16 @@ public class BitbucketBuildTrigger extends Trigger<AbstractProject<?, ?>> {
         super.start(project, newInstance);
     }
 
-    public static BitbucketBuildTrigger getTrigger(AbstractProject project) {
-        Trigger trigger = project.getTrigger(BitbucketBuildTrigger.class);
-        return (BitbucketBuildTrigger)trigger;
+    public static StashBuildTrigger getTrigger(AbstractProject project) {
+        Trigger trigger = project.getTrigger(StashBuildTrigger.class);
+        return (StashBuildTrigger)trigger;
     }
 
-    public BitbucketPullRequestsBuilder getBuilder() {
+    public StashPullRequestsBuilder getBuilder() {
         return this.bitbucketPullRequestsBuilder;
     }
 
-    public QueueTaskFuture<?> startJob(BitbucketCause cause) {
+    public QueueTaskFuture<?> startJob(StashCause cause) {
         Map<String, ParameterValue> values = new HashMap<String, ParameterValue>();
         values.put("sourceBranch", new StringParameterValue("sourceBranch", cause.getSourceBranch()));
         values.put("targetBranch", new StringParameterValue("targetBranch", cause.getTargetBranch()));
@@ -152,8 +152,8 @@ public class BitbucketBuildTrigger extends Trigger<AbstractProject<?, ?>> {
         super.stop();
     }
 
-    public static final class BitbucketBuildTriggerDescriptor extends TriggerDescriptor {
-        public BitbucketBuildTriggerDescriptor() {
+    public static final class StashBuildTriggerDescriptor extends TriggerDescriptor {
+        public StashBuildTriggerDescriptor() {
             load();
         }
 
@@ -164,7 +164,7 @@ public class BitbucketBuildTrigger extends Trigger<AbstractProject<?, ?>> {
 
         @Override
         public String getDisplayName() {
-            return "Bitbucket Pull Requests Builder";
+            return "Stash Pull Requests Builder";
         }
 
         @Override

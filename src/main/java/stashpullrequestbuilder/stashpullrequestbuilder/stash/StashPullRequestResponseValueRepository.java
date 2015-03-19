@@ -1,4 +1,4 @@
-package bitbucketpullrequestbuilder.bitbucketpullrequestbuilder.bitbucket;
+package stashpullrequestbuilder.stashpullrequestbuilder.stash;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
@@ -8,14 +8,14 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * Created by Nathan McCarthy
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BitbucketPullRequestResponseValueRepository {
-    private BitbucketPullRequestResponseValueRepositoryRepository repository;
+public class StashPullRequestResponseValueRepository {
+    private StashPullRequestResponseValueRepositoryRepository repository;
 
     @JsonIgnore
-    private BitbucketPullRequestResponseValueRepositoryBranch branch;
+    private StashPullRequestResponseValueRepositoryBranch branch;
 
     @JsonIgnore
-    private BitbucketPullRequestResponseValueRepositoryCommit commit;
+    private StashPullRequestResponseValueRepositoryCommit commit;
 
     private String latestChangeset;
     private String id;
@@ -29,7 +29,7 @@ public class BitbucketPullRequestResponseValueRepository {
     @JsonProperty("id")
     public void setId(String id) { //TODO
         this.id = id;
-        this.branch = new BitbucketPullRequestResponseValueRepositoryBranch();
+        this.branch = new StashPullRequestResponseValueRepositoryBranch();
         this.branch.setName(id);
     }
 
@@ -41,35 +41,35 @@ public class BitbucketPullRequestResponseValueRepository {
     @JsonProperty("latestChangeset")
     public void setLatestChangeset(String latestChangeset) { //TODO
         this.latestChangeset = latestChangeset;
-        this.commit = new BitbucketPullRequestResponseValueRepositoryCommit();
+        this.commit = new StashPullRequestResponseValueRepositoryCommit();
         this.commit.setHash(latestChangeset);
     }
 
     @JsonProperty("repository")
-    public BitbucketPullRequestResponseValueRepositoryRepository getRepository() {
+    public StashPullRequestResponseValueRepositoryRepository getRepository() {
         return repository;
     }
 
     @JsonProperty("repository")
-    public void setRepository(BitbucketPullRequestResponseValueRepositoryRepository repository) {
+    public void setRepository(StashPullRequestResponseValueRepositoryRepository repository) {
         this.repository = repository;
     }
 
     @JsonProperty("branch")
-    public BitbucketPullRequestResponseValueRepositoryBranch getBranch() {
+    public StashPullRequestResponseValueRepositoryBranch getBranch() {
         return branch;
     }
 
     @JsonProperty("branch")
-    public void setBranch(BitbucketPullRequestResponseValueRepositoryBranch branch) {
+    public void setBranch(StashPullRequestResponseValueRepositoryBranch branch) {
         this.branch = branch;
     }
 
-    public BitbucketPullRequestResponseValueRepositoryCommit getCommit() {
+    public StashPullRequestResponseValueRepositoryCommit getCommit() {
         return commit;
     }
 
-    public void setCommit(BitbucketPullRequestResponseValueRepositoryCommit commit) {
+    public void setCommit(StashPullRequestResponseValueRepositoryCommit commit) {
         this.commit = commit;
     }
 }

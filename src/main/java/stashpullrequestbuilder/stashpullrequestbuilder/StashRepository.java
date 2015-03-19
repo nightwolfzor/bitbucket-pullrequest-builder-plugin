@@ -1,4 +1,4 @@
-package bitbucketpullrequestbuilder.bitbucketpullrequestbuilder;
+package stashpullrequestbuilder.stashpullrequestbuilder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,16 +8,16 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import bitbucketpullrequestbuilder.bitbucketpullrequestbuilder.bitbucket.BitbucketApiClient;
-import bitbucketpullrequestbuilder.bitbucketpullrequestbuilder.bitbucket.BitbucketPullRequestComment;
-import bitbucketpullrequestbuilder.bitbucketpullrequestbuilder.bitbucket.BitbucketPullRequestResponseValue;
-import bitbucketpullrequestbuilder.bitbucketpullrequestbuilder.bitbucket.BitbucketPullRequestResponseValueRepository;
+import stashpullrequestbuilder.stashpullrequestbuilder.stash.StashApiClient;
+import stashpullrequestbuilder.stashpullrequestbuilder.stash.StashPullRequestComment;
+import stashpullrequestbuilder.stashpullrequestbuilder.stash.StashPullRequestResponseValue;
+import stashpullrequestbuilder.stashpullrequestbuilder.stash.StashPullRequestResponseValueRepository;
 
 /**
  * Created by Nathan McCarthy
  */
-public class BitbucketRepository {
-    private static final Logger logger = Logger.getLogger(BitbucketRepository.class.getName());
+public class StashRepository {
+    private static final Logger logger = Logger.getLogger(StashRepository.class.getName());
     public static final String BUILD_START_MARKER = "[*BuildStarted* **%s**] %s into %s";
     public static final String BUILD_FINISH_MARKER = "[*BuildFinished* **%s**] %s into %s";
 
@@ -30,29 +30,29 @@ public class BitbucketRepository {
     public static final String BUILD_SUCCESS_COMMENT =  "✓ SUCCESS";
     public static final String BUILD_FAILURE_COMMENT = "✕ FAILURE";
     private String projectPath;
-    private BitbucketPullRequestsBuilder builder;
-    private BitbucketBuildTrigger trigger;
-    private BitbucketApiClient client;
+    private StashPullRequestsBuilder builder;
+    private StashBuildTrigger trigger;
+    private StashApiClient client;
 
-    public BitbucketRepository(String projectPath, BitbucketPullRequestsBuilder builder) {
+    public StashRepository(String projectPath, StashPullRequestsBuilder builder) {
         this.projectPath = projectPath;
         this.builder = builder;
     }
 
     public void init() {
         trigger = this.builder.getTrigger();
-        client = new BitbucketApiClient(
+        client = new StashApiClient(
                 trigger.getUsername(),
                 trigger.getPassword(),
                 trigger.getRepositoryOwner(),
                 trigger.getRepositoryName());
     }
 
-    public Collection<BitbucketPullRequestResponseValue> getTargetPullRequests() {
+    public Collection<StashPullRequestResponseValue> getTargetPullRequests() {
         logger.info("Fetch PullRequests.");
-        List<BitbucketPullRequestResponseValue> pullRequests = client.getPullRequests();
-        List<BitbucketPullRequestResponseValue> targetPullRequests = new ArrayList<BitbucketPullRequestResponseValue>();
-        for(BitbucketPullRequestResponseValue pullRequest : pullRequests) {
+        List<StashPullRequestResponseValue> pullRequests = client.getPullRequests();
+        List<StashPullRequestResponseValue> targetPullRequests = new ArrayList<StashPullRequestResponseValue>();
+        for(StashPullRequestResponseValue pullRequest : pullRequests) {
             if (isBuildTarget(pullRequest)) {
                 targetPullRequests.add(pullRequest);
             }
@@ -60,18 +60,18 @@ public class BitbucketRepository {
         return targetPullRequests;
     }
 
-    public String postBuildStartCommentTo(BitbucketPullRequestResponseValue pullRequest) {
+    public String postBuildStartCommentTo(StashPullRequestResponseValue pullRequest) {
             String sourceCommit = pullRequest.getFromRef().getCommit().getHash();
             String destinationCommit = pullRequest.getToRef().getCommit().getHash();
             String comment = String.format(BUILD_START_MARKER, builder.getProject().getDisplayName(), sourceCommit, destinationCommit);
-            BitbucketPullRequestComment commentResponse = this.client.postPullRequestComment(pullRequest.getId(), comment);
+            StashPullRequestComment commentResponse = this.client.postPullRequestComment(pullRequest.getId(), comment);
             return commentResponse.getCommentId().toString();
     }
 
-    public void addFutureBuildTasks(Collection<BitbucketPullRequestResponseValue> pullRequests) {
-        for(BitbucketPullRequestResponseValue pullRequest : pullRequests) {
+    public void addFutureBuildTasks(Collection<StashPullRequestResponseValue> pullRequests) {
+        for(StashPullRequestResponseValue pullRequest : pullRequests) {
             String commentId = postBuildStartCommentTo(pullRequest);
-            BitbucketCause cause = new BitbucketCause(
+            StashCause cause = new StashCause(
                     pullRequest.getFromRef().getBranch().getName(),
                     pullRequest.getToRef().getBranch().getName(),
                     pullRequest.getFromRef().getRepository().getProjectName(),
@@ -101,7 +101,7 @@ public class BitbucketRepository {
         this.client.postPullRequestComment(pullRequestId, comment);
     }
 
-    private boolean isBuildTarget(BitbucketPullRequestResponseValue pullRequest) {
+    private boolean isBuildTarget(StashPullRequestResponseValue pullRequest) {
     	
         boolean shouldBuild = true;
         if (pullRequest.getState() != null && pullRequest.getState().equals("OPEN")) {
@@ -111,18 +111,18 @@ public class BitbucketRepository {
 
             String sourceCommit = pullRequest.getFromRef().getCommit().getHash();
 
-            BitbucketPullRequestResponseValueRepository destination = pullRequest.getToRef();
+            StashPullRequestResponseValueRepository destination = pullRequest.getToRef();
             String owner = destination.getRepository().getProjectName();
             String repositoryName = destination.getRepository().getRepositoryName();
             String destinationCommit = destination.getCommit().getHash();
             
             String id = pullRequest.getId();
-            List<BitbucketPullRequestComment> comments = client.getPullRequestComments(owner, repositoryName, id);
+            List<StashPullRequestComment> comments = client.getPullRequestComments(owner, repositoryName, id);
             
             if (comments != null) {
                 Collections.sort(comments);
                 Collections.reverse(comments);
-                for (BitbucketPullRequestComment comment : comments) {
+                for (StashPullRequestComment comment : comments) {
                     String content = comment.getText();
                     if (content == null || content.isEmpty()) {
                         continue;

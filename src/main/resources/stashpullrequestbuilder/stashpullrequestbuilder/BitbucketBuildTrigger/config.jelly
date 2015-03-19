@@ -2,10 +2,10 @@
   <f:entry title="Cron" field="cron">
     <f:textbox />
   </f:entry>
-  <f:entry title="Bitbucket BasicAuth Username" field="username">
+  <f:entry title="Stash BasicAuth Username" field="username">
     <f:textbox />
   </f:entry>
-  <f:entry title="Bitbucket BasicAuth Password" field="password">
+  <f:entry title="Stash BasicAuth Password" field="password">
     <f:password />
   </f:entry>
   <f:entry title="RepositoryOwner" field="repositoryOwner">

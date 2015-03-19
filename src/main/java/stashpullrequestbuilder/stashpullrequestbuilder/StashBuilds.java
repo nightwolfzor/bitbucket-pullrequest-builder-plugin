@@ -1,4 +1,4 @@
-package bitbucketpullrequestbuilder.bitbucketpullrequestbuilder;
+package stashpullrequestbuilder.stashpullrequestbuilder;
 
 import hudson.model.AbstractBuild;
 import hudson.model.Cause;
@@ -12,26 +12,26 @@ import java.util.logging.Logger;
 /**
  * Created by Nathan McCarthy
  */
-public class BitbucketBuilds {
-    private static final Logger logger = Logger.getLogger(BitbucketBuilds.class.getName());
-    private BitbucketBuildTrigger trigger;
-    private BitbucketRepository repository;
+public class StashBuilds {
+    private static final Logger logger = Logger.getLogger(StashBuilds.class.getName());
+    private StashBuildTrigger trigger;
+    private StashRepository repository;
 
-    public BitbucketBuilds(BitbucketBuildTrigger trigger, BitbucketRepository repository) {
+    public StashBuilds(StashBuildTrigger trigger, StashRepository repository) {
         this.trigger = trigger;
         this.repository = repository;
     }
 
-    public BitbucketCause getCause(AbstractBuild build) {
-        Cause cause = build.getCause(BitbucketCause.class);
-        if (cause == null || !(cause instanceof BitbucketCause)) {
+    public StashCause getCause(AbstractBuild build) {
+        Cause cause = build.getCause(StashCause.class);
+        if (cause == null || !(cause instanceof StashCause)) {
             return null;
         }
-        return (BitbucketCause) cause;
+        return (StashCause) cause;
     }
 
     public void onStarted(AbstractBuild build) {
-        BitbucketCause cause = this.getCause(build);
+        StashCause cause = this.getCause(build);
         if (cause == null) {
             return;
         }
@@ -43,7 +43,7 @@ public class BitbucketBuilds {
     }
 
     public void onCompleted(AbstractBuild build) {
-        BitbucketCause cause = this.getCause(build);
+        StashCause cause = this.getCause(build);
         if (cause == null) {
             return;
         }

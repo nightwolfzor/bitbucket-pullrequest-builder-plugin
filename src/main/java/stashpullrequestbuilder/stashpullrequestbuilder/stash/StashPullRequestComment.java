@@ -1,4 +1,4 @@
-package bitbucketpullrequestbuilder.bitbucketpullrequestbuilder.bitbucket;
+package stashpullrequestbuilder.stashpullrequestbuilder.stash;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -7,7 +7,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * Created by Nathan McCarthy
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BitbucketPullRequestComment implements Comparable<BitbucketPullRequestComment> {
+public class StashPullRequestComment implements Comparable<StashPullRequestComment> {
 
     private Integer commentId;//
     private String text;
@@ -32,7 +32,7 @@ public class BitbucketPullRequestComment implements Comparable<BitbucketPullRequ
     }
 
 
-    public int compareTo(BitbucketPullRequestComment target) {
+    public int compareTo(StashPullRequestComment target) {
         if (this.getCommentId() > target.getCommentId()) {
             return 1;
         } else if (this.getCommentId().equals(target.getCommentId())) {

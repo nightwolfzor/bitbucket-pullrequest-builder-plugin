@@ -1,7 +1,7 @@
-Bitbucket Pull Request Builder Plugin
+Stash Pull Request Builder Plugin
 ================================
 
-This Jenkins plugin builds pull requests from Bitbucket.org and will report the test results.
+This Jenkins plugin builds pull requests from Stash.org and will report the test results.
 
 
 Prerequisites
@@ -28,11 +28,11 @@ Creating a Job
   - git@bitbucket.org:${repositoryOwner}/${repositoryName}.git
 - In Branch Specifier, type as bellow
   - */${sourceBranch}
-- Under Build Triggers, check Bitbucket Pull Request Builder
+- Under Build Triggers, check Stash Pull Request Builder
 - In Cron, enter crontab for this job.
   - ex: * * * * *
-- In Bitbucket BasicAuth Username, write your bitbucket username like jenkins@densan-labs.net
-- In Bitbucket BasicAuth Password, write your password
+- In Stash BasicAuth Username, write your bitbucket username like jenkins@densan-labs.net
+- In Stash BasicAuth Password, write your password
 - Write RepositoryOwner
 - Write RepositoryName
 - Save to preserve your changes
@@ -59,7 +59,7 @@ If you want to rerun pull request test, write “test this please” comment to 
 
 
 
-Contributing to Bitbucket Pull Request Builder Plugin
+Contributing to Stash Pull Request Builder Plugin
 ================================================
 
 - Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
