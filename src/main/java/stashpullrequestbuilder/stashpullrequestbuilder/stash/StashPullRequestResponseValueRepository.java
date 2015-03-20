@@ -30,7 +30,10 @@ public class StashPullRequestResponseValueRepository {
     public void setId(String id) { //TODO
         this.id = id;
         this.branch = new StashPullRequestResponseValueRepositoryBranch();
-        this.branch.setName(id);
+        String[] ref = id.split("/");
+        if (ref.length > 0) {
+            this.branch.setName(ref[ref.length - 1]);
+        }
     }
 
     @JsonProperty("latestChangeset")

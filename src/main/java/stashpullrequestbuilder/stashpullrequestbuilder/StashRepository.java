@@ -1,5 +1,10 @@
 package stashpullrequestbuilder.stashpullrequestbuilder;
 
+import stashpullrequestbuilder.stashpullrequestbuilder.stash.StashApiClient;
+import stashpullrequestbuilder.stashpullrequestbuilder.stash.StashPullRequestComment;
+import stashpullrequestbuilder.stashpullrequestbuilder.stash.StashPullRequestResponseValue;
+import stashpullrequestbuilder.stashpullrequestbuilder.stash.StashPullRequestResponseValueRepository;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,11 +12,6 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import stashpullrequestbuilder.stashpullrequestbuilder.stash.StashApiClient;
-import stashpullrequestbuilder.stashpullrequestbuilder.stash.StashPullRequestComment;
-import stashpullrequestbuilder.stashpullrequestbuilder.stash.StashPullRequestResponseValue;
-import stashpullrequestbuilder.stashpullrequestbuilder.stash.StashPullRequestResponseValueRepository;
 
 /**
  * Created by Nathan McCarthy
@@ -29,6 +29,7 @@ public class StashRepository {
 
     public static final String BUILD_SUCCESS_COMMENT =  "✓ SUCCESS";
     public static final String BUILD_FAILURE_COMMENT = "✕ FAILURE";
+
     private String projectPath;
     private StashPullRequestsBuilder builder;
     private StashBuildTrigger trigger;

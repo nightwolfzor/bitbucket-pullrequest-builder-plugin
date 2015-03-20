@@ -5,6 +5,7 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
@@ -66,8 +67,7 @@ public class StashApiClient {
     public StashPullRequestComment postPullRequestComment(String pullRequestId, String comment) {
         String path = V1_API_BASE_URL + this.project + "/repos/" + this.repositoryName + "/pull-requests/" + pullRequestId + "/comments";
         try {
-            NameValuePair content = new NameValuePair("text", comment);
-            String response = postRequest(path, new NameValuePair[]{ content });
+            String response = postRequest(path,  comment);
             return parseSingleCommentJson(response);
 
         } catch (UnsupportedEncodingException e) {
@@ -131,12 +131,16 @@ public class StashApiClient {
         }
     }
 
-    private String postRequest(String path, NameValuePair[] params) throws UnsupportedEncodingException {
+    private String postRequest(String path, String comment) throws UnsupportedEncodingException {
         logger.log(Level.INFO, "PR-POST-REQUEST:" + path);
         HttpClient client = getHttpClient();
         client.getState().setCredentials(AuthScope.ANY, credentials);
         PostMethod httppost = new PostMethod(path);
-        httppost.setRequestBody(params);
+        StringRequestEntity requestEntity = new StringRequestEntity(
+                "{\"text\":"+ "\"" + comment + "\"}",
+                "application/json",
+                "UTF-8");
+        httppost.setRequestEntity(requestEntity);
         client.getParams().setAuthenticationPreemptive(true);
         String response = "";
         try {
