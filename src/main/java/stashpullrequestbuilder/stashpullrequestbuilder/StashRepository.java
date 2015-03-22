@@ -43,6 +43,7 @@ public class StashRepository {
     public void init() {
         trigger = this.builder.getTrigger();
         client = new StashApiClient(
+                trigger.getStashHost(),
                 trigger.getUsername(),
                 trigger.getPassword(),
                 trigger.getRepositoryOwner(),

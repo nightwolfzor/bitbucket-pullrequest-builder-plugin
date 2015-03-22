@@ -22,22 +22,22 @@ import java.util.logging.Logger;
 public class StashApiClient {
     private static final Logger logger = Logger.getLogger(StashApiClient.class.getName());
 
-    private static final String STASH_HOST = "https://git.int.quantium.com.au";
-    private static final String V1_API_BASE_URL = STASH_HOST + "/rest/api/1.0/projects/";
-    private static final String V2_API_BASE_URL = STASH_HOST + "/rest/api/1.0/projects/";
+    private String apiBaseUrl ;
 
     private String project;
     private String repositoryName;
     private Credentials credentials;
 
-    public StashApiClient(String username, String password, String project, String repositoryName) {
+
+    public StashApiClient(String stashHost, String username, String password, String project, String repositoryName) {
         this.credentials = new UsernamePasswordCredentials(username, password);
         this.project = project;
         this.repositoryName = repositoryName;
+        this.apiBaseUrl = stashHost + "/rest/api/1.0/projects/";
     }
 
     public List<StashPullRequestResponseValue> getPullRequests() {
-        String response = getRequest(V2_API_BASE_URL + this.project + "/repos/" + this.repositoryName + "/pull-requests/");
+        String response = getRequest(apiBaseUrl + this.project + "/repos/" + this.repositoryName + "/pull-requests/");
         try {
             return parsePullRequestJson(response).getPrValues();
         } catch(Exception e) {
@@ -48,7 +48,7 @@ public class StashApiClient {
 
     public List<StashPullRequestComment> getPullRequestComments(String commentOwnerName, String commentRepositoryName, String pullRequestId) {
         String response = getRequest(
-            V1_API_BASE_URL + commentOwnerName + "/repos/" + commentRepositoryName + "/pull-requests/" + pullRequestId + "/activities");
+            apiBaseUrl + commentOwnerName + "/repos/" + commentRepositoryName + "/pull-requests/" + pullRequestId + "/activities");
         try {
             return parseCommentJson(response);
         } catch(Exception e) {
@@ -58,14 +58,14 @@ public class StashApiClient {
     }
 
     public void deletePullRequestComment(String pullRequestId, String commentId) {
-        String path = V1_API_BASE_URL + this.project + "/repos/" + this.repositoryName + "/pull-requests/" + pullRequestId + "/comments/" + commentId;
+        String path = apiBaseUrl + this.project + "/repos/" + this.repositoryName + "/pull-requests/" + pullRequestId + "/comments/" + commentId;
         //https://bitbucket.org/api/1.0/repositories/{accountname}/{repo_slug}/pullrequests/{pull_request_id}/comments/{comment_id}
         deleteRequest(path);
     }
 
 
     public StashPullRequestComment postPullRequestComment(String pullRequestId, String comment) {
-        String path = V1_API_BASE_URL + this.project + "/repos/" + this.repositoryName + "/pull-requests/" + pullRequestId + "/comments";
+        String path = apiBaseUrl + this.project + "/repos/" + this.repositoryName + "/pull-requests/" + pullRequestId + "/comments";
         try {
             String response = postRequest(path,  comment);
             return parseSingleCommentJson(response);

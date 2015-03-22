@@ -23,6 +23,7 @@ public class StashBuildTrigger extends Trigger<AbstractProject<?, ?>> {
     private static final Logger logger = Logger.getLogger(StashBuildTrigger.class.getName());
     private final String projectPath;
     private final String cron;
+    private final String stashHost;
     private final String username;
     private final String password;
     private final String repositoryOwner;
@@ -39,6 +40,7 @@ public class StashBuildTrigger extends Trigger<AbstractProject<?, ?>> {
     public StashBuildTrigger(
             String projectPath,
             String cron,
+            String stashHost,
             String username,
             String password,
             String repositoryOwner,
@@ -49,12 +51,17 @@ public class StashBuildTrigger extends Trigger<AbstractProject<?, ?>> {
         super(cron);
         this.projectPath = projectPath;
         this.cron = cron;
+        this.stashHost = stashHost;
         this.username = username;
         this.password = password;
         this.repositoryOwner = repositoryOwner;
         this.repositoryName = repositoryName;
         this.ciSkipPhrases = ciSkipPhrases;
         this.checkDestinationCommit = checkDestinationCommit;
+    }
+
+    public String getStashHost() {
+        return stashHost;
     }
 
     public String getProjectPath() {

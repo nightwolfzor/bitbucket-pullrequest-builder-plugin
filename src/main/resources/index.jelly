@@ -2,5 +2,5 @@
   This view is used to render the installed plugins page.
 -->
 <div>
-  This plugin polls BitBucket to determine whether there are Pull Requests that should be built.
+  This plugin polls Atlassian Stash to determine whether there are Pull Requests that should be built.
 </div>
