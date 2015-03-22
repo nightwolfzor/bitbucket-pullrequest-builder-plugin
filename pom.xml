@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.509.4</version><!-- which version of Jenkins is this plugin built against? -->
+    <version>1.532</version><!-- which version of Jenkins is this plugin built against? -->
   </parent>
 
   <artifactId>stash-pullrequest-builder</artifactId>
@@ -14,9 +14,9 @@
   <url>https://wiki.jenkins-ci.org/display/JENKINS/Stash+pullrequest+builder+plugin</url>
 
   <scm>
-    <connection>scm:git:ssh://git@github.com/jenkinsci/bitbucket-pullrequest-builder-plugin.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/bitbucket-pullrequest-builder-plugin.git</developerConnection>
-    <url>https://github.com/jenkinsci/bitbucket-pullrequest-builder-plugin.git</url>
+    <connection>scm:git:ssh://git@github.com/jenkinsci/stash-pullrequest-builder-plugin.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/jenkinsci/stash-pullrequest-builder-plugin.git</developerConnection>
+    <url>https://github.com/jenkinsci/stash-pullrequest-builder-plugin.git</url>
     <tag>HEAD</tag>
   </scm>
   <developers>

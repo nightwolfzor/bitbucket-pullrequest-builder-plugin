@@ -17,9 +17,10 @@ public class StashCause extends Cause {
     private final String sourceCommitHash;
     private final String destinationCommitHash;
     private final String buildStartCommentId;
-    public static final String BITBUCKET_URL = "https://bitbucket.org/";
+    private final String stashHost;
 
-    public StashCause(String sourceBranch,
+    public StashCause(String stashHost,
+                          String sourceBranch,
                           String targetBranch,
                           String repositoryOwner,
                           String repositoryName,
@@ -41,6 +42,7 @@ public class StashCause extends Cause {
         this.sourceCommitHash = sourceCommitHash;
         this.destinationCommitHash = destinationCommitHash;
         this.buildStartCommentId = buildStartCommentId;
+        this.stashHost = stashHost.replaceAll("/$", "");
     }
 
     public String getSourceBranch() {
@@ -83,9 +85,9 @@ public class StashCause extends Cause {
 
     @Override
     public String getShortDescription() {
-        String description = "<a href=\"" + BITBUCKET_URL + this.getDestinationRepositoryOwner() + "/";
-        description += this.getDestinationRepositoryName() + "/pull-request/" + this.getPullRequestId();
-        description += "\">#" + this.getPullRequestId() + " " + this.getPullRequestTitle() + "</a>";
-        return description;
+        return "<a href=\"" + stashHost + "/projects/" + this.getDestinationRepositoryOwner() + "/repos/" +
+                this.getDestinationRepositoryName() + "/pull-requests/" + this.getPullRequestId() +
+                "\" >PR #" + this.getPullRequestId() + " " + this.getPullRequestTitle() + " </a>";
     }
 }
+

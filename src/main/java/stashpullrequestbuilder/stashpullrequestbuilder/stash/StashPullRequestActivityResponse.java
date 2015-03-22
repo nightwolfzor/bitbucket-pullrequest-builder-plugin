@@ -1,5 +1,6 @@
 package stashpullrequestbuilder.stashpullrequestbuilder.stash;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -10,28 +11,48 @@ import java.util.List;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StashPullRequestActivityResponse {
-    private List<StashPullRequestActivitity> prValues;
+    @JsonIgnore
+    private List<StashPullRequestActivity> prValues;
 
-    private int size;//
+    @JsonProperty("size")
+    private Integer size;//
+
+    private Boolean isLastPage;
+
+    private Integer nextPageStart;
 
     @JsonProperty("values")
-    public List<StashPullRequestActivitity> getPrValues() {
+    public List<StashPullRequestActivity> getPrValues() {
         return prValues;
     }
 
     @JsonProperty("values")
-    public void setPrValues(List<StashPullRequestActivitity> prValues) {
+    public void setPrValues(List<StashPullRequestActivity> prValues) {
         this.prValues = prValues;
     }
 
-    @JsonProperty("size")
-    public int getSize() {
+    public Integer getSize() {
         return size;
     }
 
-    @JsonProperty("size")
-    public void setSize(int size) {
+    public void setSize(Integer size) {
         this.size = size;
+    }
+
+    public Boolean getIsLastPage() {
+        return isLastPage;
+    }
+
+    public void setIsLastPage(Boolean isLastPage) {
+        this.isLastPage = isLastPage;
+    }
+
+    public Integer getNextPageStart() {
+        return nextPageStart;
+    }
+
+    public void setNextPageStart(Integer nextPageStart) {
+        this.nextPageStart = nextPageStart;
     }
 
 }

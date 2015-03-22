@@ -24,11 +24,11 @@ public class StashRepository {
     public static final String BUILD_START_REGEX = "\\[\\*BuildStarted\\* \\*\\*%s\\*\\*\\] ([0-9a-fA-F]+) into ([0-9a-fA-F]+)";
     public static final String BUILD_FINISH_REGEX = "\\[\\*BuildFinished\\* \\*\\*%s\\*\\*\\] ([0-9a-fA-F]+) into ([0-9a-fA-F]+)";
 
-    public static final String BUILD_FINISH_SENTENCE = BUILD_FINISH_MARKER + " \n\n **%s** - %s";
+    public static final String BUILD_FINISH_SENTENCE = BUILD_FINISH_MARKER + " \n\n **[%s](%s)** - Build #%d";
     public static final String BUILD_REQUEST_MARKER = "test this please";
 
-    public static final String BUILD_SUCCESS_COMMENT =  "✓ SUCCESS";
-    public static final String BUILD_FAILURE_COMMENT = "✕ FAILURE";
+    public static final String BUILD_SUCCESS_COMMENT =  "✓ BUILD SUCCESS";
+    public static final String BUILD_FAILURE_COMMENT = "✕ BUILD FAILURE";
 
     private String projectPath;
     private StashPullRequestsBuilder builder;
@@ -46,7 +46,7 @@ public class StashRepository {
                 trigger.getStashHost(),
                 trigger.getUsername(),
                 trigger.getPassword(),
-                trigger.getRepositoryOwner(),
+                trigger.getProjectCode(),
                 trigger.getRepositoryName());
     }
 
@@ -74,6 +74,7 @@ public class StashRepository {
         for(StashPullRequestResponseValue pullRequest : pullRequests) {
             String commentId = postBuildStartCommentTo(pullRequest);
             StashCause cause = new StashCause(
+                    trigger.getStashHost(),
                     pullRequest.getFromRef().getBranch().getName(),
                     pullRequest.getToRef().getBranch().getName(),
                     pullRequest.getFromRef().getRepository().getProjectName(),
@@ -93,12 +94,12 @@ public class StashRepository {
         this.client.deletePullRequestComment(pullRequestId,commentId);
     }
 
-    public void postFinishedComment(String pullRequestId, String sourceCommit,  String destinationCommit, boolean success, String buildUrl) {
+    public void postFinishedComment(String pullRequestId, String sourceCommit,  String destinationCommit, boolean success, String buildUrl, int buildNumber) {
         String message = BUILD_FAILURE_COMMENT;
         if (success){
             message = BUILD_SUCCESS_COMMENT;
         }
-        String comment = String.format(BUILD_FINISH_SENTENCE, builder.getProject().getDisplayName(), sourceCommit, destinationCommit, message, buildUrl);
+        String comment = String.format(BUILD_FINISH_SENTENCE, builder.getProject().getDisplayName(), sourceCommit, destinationCommit, message, buildUrl, buildNumber);
 
         this.client.postPullRequestComment(pullRequestId, comment);
     }

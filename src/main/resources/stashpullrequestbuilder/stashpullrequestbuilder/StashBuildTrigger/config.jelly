@@ -11,7 +11,7 @@
   <f:entry title="Stash BasicAuth Password" field="password">
     <f:password />
   </f:entry>
-  <f:entry title="RepositoryOwner" field="repositoryOwner">
+  <f:entry title="Project" field="projectCode">
     <f:textbox />
   </f:entry>
   <f:entry title="RepositoryName" field="repositoryName">

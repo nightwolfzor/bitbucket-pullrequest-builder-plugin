@@ -1,12 +1,16 @@
 package stashpullrequestbuilder.stashpullrequestbuilder.stash;
 
-import org.apache.commons.httpclient.*;
+import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ObjectNode;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -33,7 +37,7 @@ public class StashApiClient {
         this.credentials = new UsernamePasswordCredentials(username, password);
         this.project = project;
         this.repositoryName = repositoryName;
-        this.apiBaseUrl = stashHost + "/rest/api/1.0/projects/";
+        this.apiBaseUrl = stashHost.replaceAll("/$", "") + "/rest/api/1.0/projects/";
     }
 
     public List<StashPullRequestResponseValue> getPullRequests() {
@@ -46,11 +50,23 @@ public class StashApiClient {
         return Collections.EMPTY_LIST;
     }
 
-    public List<StashPullRequestComment> getPullRequestComments(String commentOwnerName, String commentRepositoryName, String pullRequestId) {
-        String response = getRequest(
-            apiBaseUrl + commentOwnerName + "/repos/" + commentRepositoryName + "/pull-requests/" + pullRequestId + "/activities");
+    public List<StashPullRequestComment> getPullRequestComments(String projectCode, String commentRepositoryName, String pullRequestId) {
+
         try {
-            return parseCommentJson(response);
+            boolean isLastPage = false;
+            int start = 0;
+            List<StashPullRequestActivityResponse> commentResponses = new ArrayList<StashPullRequestActivityResponse>();
+            while (!isLastPage) {
+                String response = getRequest(
+                        apiBaseUrl + projectCode + "/repos/" + commentRepositoryName + "/pull-requests/" + pullRequestId + "/activities?start=" + start);
+                StashPullRequestActivityResponse resp = parseCommentJson(response);
+                isLastPage = resp.getIsLastPage();
+                if (!isLastPage) {
+                    start = resp.getNextPageStart();
+                }
+                commentResponses.add(resp);
+            }
+            return extractComments(commentResponses);
         } catch(Exception e) {
             logger.log(Level.WARNING, "invalid pull request response.", e);
         }
@@ -58,8 +74,7 @@ public class StashApiClient {
     }
 
     public void deletePullRequestComment(String pullRequestId, String commentId) {
-        String path = apiBaseUrl + this.project + "/repos/" + this.repositoryName + "/pull-requests/" + pullRequestId + "/comments/" + commentId;
-        //https://bitbucket.org/api/1.0/repositories/{accountname}/{repo_slug}/pullrequests/{pull_request_id}/comments/{comment_id}
+        String path = apiBaseUrl + this.project + "/repos/" + this.repositoryName + "/pull-requests/" + pullRequestId + "/comments/" + commentId + "?version=0";
         deleteRequest(path);
     }
 
@@ -123,23 +138,35 @@ public class StashApiClient {
         client.getState().setCredentials(AuthScope.ANY, credentials);
         DeleteMethod httppost = new DeleteMethod(path);
         client.getParams().setAuthenticationPreemptive(true);
-        String response = "";
+        int res = -1;
         try {
-            client.executeMethod(httppost);
+            res = client.executeMethod(httppost);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        logger.log(Level.INFO, "Delete comment {" + path + "} returned result code; " + res);
     }
 
     private String postRequest(String path, String comment) throws UnsupportedEncodingException {
-        logger.log(Level.INFO, "PR-POST-REQUEST:" + path);
+        logger.log(Level.INFO, "PR-POST-REQUEST:" + path + " with: " + comment);
         HttpClient client = getHttpClient();
         client.getState().setCredentials(AuthScope.ANY, credentials);
         PostMethod httppost = new PostMethod(path);
-        StringRequestEntity requestEntity = new StringRequestEntity(
-                "{\"text\":"+ "\"" + comment + "\"}",
-                "application/json",
-                "UTF-8");
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.getNodeFactory().objectNode();
+        node.put("text", comment);
+
+        StringRequestEntity requestEntity = null;
+        try {
+            requestEntity = new StringRequestEntity(
+                    mapper.writeValueAsString(node),
+                    "application/json",
+                    "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         httppost.setRequestEntity(requestEntity);
         client.getParams().setAuthenticationPreemptive(true);
         String response = "";
@@ -164,13 +191,19 @@ public class StashApiClient {
         return parsedResponse;
     }
 
-    private List<StashPullRequestComment> parseCommentJson(String response) throws IOException {
+    private StashPullRequestActivityResponse parseCommentJson(String response) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         StashPullRequestActivityResponse parsedResponse;
         parsedResponse = mapper.readValue(response, StashPullRequestActivityResponse.class);
+        return parsedResponse;
+    }
+
+    private List<StashPullRequestComment> extractComments(List<StashPullRequestActivityResponse> responses) {
         List<StashPullRequestComment> comments = new ArrayList<StashPullRequestComment>();
-        for (StashPullRequestActivitity a : parsedResponse.getPrValues()) {
-            if (a != null && a.getComment() != null) comments.add(a.getComment());
+        for (StashPullRequestActivityResponse parsedResponse: responses) {
+            for (StashPullRequestActivity a : parsedResponse.getPrValues()) {
+                if (a != null && a.getComment() != null) comments.add(a.getComment());
+            }
         }
         return comments;
     }

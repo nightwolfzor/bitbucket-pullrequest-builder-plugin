@@ -1,22 +1,15 @@
 Stash Pull Request Builder Plugin
 ================================
 
-This Jenkins plugin builds pull requests from Stash.org and will report the test results.
+This Jenkins plugin builds pull requests from a Atlassian Stash server and will report the test results as a comment.
+This plugin was inspired by the GitHub & BitBucket pull request builder plugins.
 
 
 Prerequisites
 ================================
 
-- Jenkins 1.509.4 or higher.
-- https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin
-
-Installation
-================================
-
-- Download this plugin from http://doc.densan-labs.net/bitbucket-pullrequest-builder.hpi (Temporary link)
-- Go to Jenkins -> Manage Plugins -> Advanced 
-- Choose File and select .hpi file above and upload
-- Ensure you restart Jenkins
+- Jenkins 1.532 or higher.
+- Git Plugin - https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin
 
 
 Creating a Job
@@ -25,21 +18,22 @@ Creating a Job
 - Create a new job
 - Select Git SCM
 - Add Repository URL as bellow
-  - git@bitbucket.org:${repositoryOwner}/${repositoryName}.git
+  - git@stash.org:${projectCode}/${repositoryName}.git
 - In Branch Specifier, type as bellow
   - */${sourceBranch}
 - Under Build Triggers, check Stash Pull Request Builder
 - In Cron, enter crontab for this job.
-  - ex: * * * * *
-- In Stash BasicAuth Username, write your bitbucket username like jenkins@densan-labs.net
-- In Stash BasicAuth Password, write your password
-- Write RepositoryOwner
-- Write RepositoryName
+  - e.g. every minute: * * * * *
+- In Stash BasicAuth Username - Stash username like jenkins-buildbot
+- In Stash BasicAuth Password - Jenkins Build Bot password
+- Supply project code (this is the abbreviated project code, e.g. PRJ)
+- Supply Repository Name (e.g. myRepo)
 - Save to preserve your changes
 
 Merge the Pull Request's Source Branch into the Target Branch Before Building
 ==============================================================================
 You may want Jenkins to attempt to merge your PR before doing the build -- this way it will find conflicts for you automatically.
+
 - Follow the steps above in "Creating a Job"
 - In the "Source Code Management" > "Git" > "Additional Behaviors" section, click "Add" > "Merge Before Building"
 - In "Name of Repository" put "origin" (or, if not using default name, use your remote repository's name. Note: unlike in the main part of the Git Repository config, you cannot leave this item blank for "default".)
@@ -54,33 +48,17 @@ If you are merging into your target branch, you might want Jenkins to do a new b
 Rerun test builds
 ====================
 
-If you want to rerun pull request test, write “test this please” comment to your pull request.
+If you want to rerun pull request test, write *“test this please”* comment to your pull request.
 
-
-
-
-Contributing to Stash Pull Request Builder Plugin
-================================================
-
-- Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
-
-- Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
-
-- Fork the project.
-
-- Start a feature/bugfix branch.
-
-- Commit and push until you are happy with your contribution.
 
 
 Copyright
 =============================
 
-Copyright © 2014 S.Nathan McCarthy.
+Copyright © 2015 Nathan McCarthy.
 
 
 License
 =============================
 
 - BSD License
-- See COPYING file

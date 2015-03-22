@@ -26,12 +26,12 @@ public class StashBuildTrigger extends Trigger<AbstractProject<?, ?>> {
     private final String stashHost;
     private final String username;
     private final String password;
-    private final String repositoryOwner;
+    private final String projectCode;
     private final String repositoryName;
     private final String ciSkipPhrases;
     private final boolean checkDestinationCommit;
     
-    transient private StashPullRequestsBuilder bitbucketPullRequestsBuilder;
+    transient private StashPullRequestsBuilder stashPullRequestsBuilder;
 
     @Extension
     public static final StashBuildTriggerDescriptor descriptor = new StashBuildTriggerDescriptor();
@@ -43,7 +43,7 @@ public class StashBuildTrigger extends Trigger<AbstractProject<?, ?>> {
             String stashHost,
             String username,
             String password,
-            String repositoryOwner,
+            String projectCode,
             String repositoryName,
             String ciSkipPhrases,
             boolean checkDestinationCommit
@@ -54,7 +54,7 @@ public class StashBuildTrigger extends Trigger<AbstractProject<?, ?>> {
         this.stashHost = stashHost;
         this.username = username;
         this.password = password;
-        this.repositoryOwner = repositoryOwner;
+        this.projectCode = projectCode;
         this.repositoryName = repositoryName;
         this.ciSkipPhrases = ciSkipPhrases;
         this.checkDestinationCommit = checkDestinationCommit;
@@ -80,8 +80,8 @@ public class StashBuildTrigger extends Trigger<AbstractProject<?, ?>> {
         return password;
     }
 
-    public String getRepositoryOwner() {
-        return repositoryOwner;
+    public String getProjectCode() {
+        return projectCode;
     }
 
     public String getRepositoryName() {
@@ -99,10 +99,10 @@ public class StashBuildTrigger extends Trigger<AbstractProject<?, ?>> {
     @Override
     public void start(AbstractProject<?, ?> project, boolean newInstance) {
         try {
-            this.bitbucketPullRequestsBuilder = StashPullRequestsBuilder.getBuilder();
-            this.bitbucketPullRequestsBuilder.setProject(project);
-            this.bitbucketPullRequestsBuilder.setTrigger(this);
-            this.bitbucketPullRequestsBuilder.setupBuilder();
+            this.stashPullRequestsBuilder = StashPullRequestsBuilder.getBuilder();
+            this.stashPullRequestsBuilder.setProject(project);
+            this.stashPullRequestsBuilder.setTrigger(this);
+            this.stashPullRequestsBuilder.setupBuilder();
         } catch(IllegalStateException e) {
             logger.log(Level.SEVERE, "Can't start trigger", e);
             return;
@@ -116,14 +116,14 @@ public class StashBuildTrigger extends Trigger<AbstractProject<?, ?>> {
     }
 
     public StashPullRequestsBuilder getBuilder() {
-        return this.bitbucketPullRequestsBuilder;
+        return this.stashPullRequestsBuilder;
     }
 
     public QueueTaskFuture<?> startJob(StashCause cause) {
         Map<String, ParameterValue> values = new HashMap<String, ParameterValue>();
         values.put("sourceBranch", new StringParameterValue("sourceBranch", cause.getSourceBranch()));
         values.put("targetBranch", new StringParameterValue("targetBranch", cause.getTargetBranch()));
-        values.put("repositoryOwner", new StringParameterValue("repositoryOwner", cause.getRepositoryOwner()));
+        values.put("projectCode", new StringParameterValue("projectCode", cause.getRepositoryOwner()));
         values.put("repositoryName", new StringParameterValue("repositoryName", cause.getRepositoryName()));
         values.put("pullRequestId", new StringParameterValue("pullRequestId", cause.getPullRequestId()));
         values.put("destinationRepositoryOwner", new StringParameterValue("destinationRepositoryOwner", cause.getDestinationRepositoryOwner()));
@@ -149,7 +149,7 @@ public class StashBuildTrigger extends Trigger<AbstractProject<?, ?>> {
         if(this.getBuilder().getProject().isDisabled()) {
             logger.info("Build Skip.");
         } else {
-            this.bitbucketPullRequestsBuilder.run();
+            this.stashPullRequestsBuilder.run();
         }
         this.getDescriptor().save();
     }
